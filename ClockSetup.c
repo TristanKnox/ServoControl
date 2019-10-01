@@ -25,41 +25,33 @@ void clock_setup(void){
 	
 	// Set prescalar
 	TIM2->PSC = 80-1;
-	TIM2->ARR = 0xFFFFFFFF;//How hight to count 
+	TIM2->ARR = 0x4E20;//count of 20,000
 	
+	
+	
+	// Set CC1 to output mode bits 0b00 should be 0
+	TIM2->CCMR1 &= ~3; // ensure previous values are clear
+	
+
+	
+	// bit 4 to be 0 for upcount
+	// bit 3 to be 0 for continuous
+	TIM2->CR1 &= ~8;
+	TIM2->CR1 &= ~4;
+
+	TIM2->CCMR1 |= TIM_CCMR1_OC1PE;
+	// 
+	TIM2->CCR1 = 2000;
 	TIM2->EGR |= TIM_EGR_UG;
 	
-	// Set the active input
-	TIM2->CCMR1 &= ~3; // ensure previous values are clear
-	TIM2->CCMR1 |= 1;  // 0b01: Channel 1 is set as input and mapped to timer input 1 (TI1)
 	
-	// Set input filter
-	TIM2->CCMR1 &= ~TIM_CCMR1_IC1F;	//CLEAR
-	TIM2->CCMR1 |= TIM_CCMR1_IC1F; //	IC1F is 0010
+	// Clear bit 1 to set to active high
+	TIM2->CCER &= ~2;
 	
-	//Set the active Edge
-	// CC1NP is bit 4
-	//CC1P is bit 1
-	// If CC1NP = 0 and CC1P = 0 then rising edges only
-	// If CC1NP = 0 and CC1P = 1 then falling edges only
-	// If CC1NP = 1 and CC1P = 1 then rising and falling edges 
-	TIM2->CCER &= ~TIM_CCER_CC1P; //~8 clearing bit 4
-	TIM2->CCER &= ~TIM_CCER_CC1NP; //~2 clearing bit 1
-	
-	// Set the input prescaler
-	TIM2->CCMR1 &= ~TIM_CCMR1_IC1PSC;
-	
-	// enable the input capture
-	// by setting the CC1E regester which is bit 0
-	TIM2->CCER |= 1;
-	
-	//Enable interrupt and DMA	
-	TIM2->DIER |= TIM_DIER_CC1DE;
-	TIM2->DIER |= TIM_DIER_CC1DE;
+
 	
 	// Start the clock
 	TIM2->CR1 |= TIM_CR1_CEN;
-	TIM2->SR &= ~1;
 }
 
 //

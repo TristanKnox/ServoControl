@@ -412,11 +412,6 @@
               <FilePath>.\UART.c</FilePath>
             </File>
             <File>
-              <FileName>pins.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pins.txt</FilePath>
-            </File>
-            <File>
               <FileName>PinSetup.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\PinSetup.c</FilePath>
@@ -435,16 +430,6 @@
               <FileName>ClockSetup.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\ClockSetup.h</FilePath>
-            </File>
-            <File>
-              <FileName>DataColector.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\DataColector.c</FilePath>
-            </File>
-            <File>
-              <FileName>DataColector.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\DataColector.h</FilePath>
             </File>
             <File>
               <FileName>UI.c</FileName>

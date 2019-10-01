@@ -4,7 +4,6 @@
 #include "UART.h"
 #include "PinSetup.h"
 #include "ClockSetup.h"
-#include "DataColector.h"
 #include "UI.h"
 
 #include <string.h>
@@ -15,37 +14,16 @@ int post_routine(void);
 
 
 int main(void){
-	
-	// Initiat needed routiens
-	System_Clock_Init(); // Switch System Clock = 80 MHz
 	LED_Init();
-	UART2_Init();
-	clockSetup();
 	
-	display_header(79,"Welcome to our Demo");
-	
-	int run = 1;
-	// Run until the user specifies that they are done
-	while(run){
-		// Verify that there is data input
-		while(!post_routine()){
-			if(!try_again_promt("No input detected\r\nWould you like to run again? (Y/N)\r\n")){
-				run = 0;
-				break;
-			}
-		}
-		// Break out of loop if user has specified that they no longer want to run
-		if(!run)
-			break;
-		// Prompt for input, Gather data, display data
-		prompt_for_limit();
-		gather_data(1001);
-		display_data();
-		// Prompt user to run again
-		if(!try_again_promt("Would you like to run again? (Y/N)"))
-			run = 0;
+	clock_setup();
+	Red_LED_On();
+	while(1){
+		Green_LED_On();
+		//for(int i = 0; i < 400000; i++);
+		Green_LED_Off();
+		//for(int i = 0; i < 400000; i++);
 	}
-	display_string("Good bye");
 }
 
 //
