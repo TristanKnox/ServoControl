@@ -19,34 +19,51 @@ void clock_setup(void){
 	GPIOA->MODER |= 2;//0b10 set pin 0 to ALT
 	GPIOA->AFR[0] &= ~0xF;
 	GPIOA->AFR[0] |= 0x1; // Setting AF1
+	GPIOA->PUPDR &= ~3;	//CLEAR bits 0 and 1 to endure pin is set for no pull-up pull-down
 	
 	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;//have tried APB2ENR
 	//RCC->APB2ENR |= RCC_APB1ENR1_TIM2EN;//
+	
+	
+	// Counting direction: 0 = Up-counting, 1 = Down-counting
+	TIM2->CR1 &= ~TIM_CR1_DIR; //up_counting
 	
 	// Set prescalar
 	TIM2->PSC = 80-1;
 	TIM2->ARR = 0x4E20;//count of 20,000
 	
 	
-	
+	// Clear output compare mode bits for channel 1
 	// Set CC1 to output mode bits 0b00 should be 0
-	TIM2->CCMR1 &= ~3; // ensure previous values are clear
+	TIM2->CCMR1 &= ~TIM_CCMR1_OC1M;//~3; // ensure previous values are clear
 	
-
+	// Select PWM Mode 1 output on channel 1 (OC1M = 110)
+	TIM2->CCMR1 |= TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2;
 	
-	// bit 4 to be 0 for upcount
-	// bit 3 to be 0 for continuous
-	TIM2->CR1 &= ~8;
-	TIM2->CR1 &= ~4;
-
+	// Output 1 preload enable
 	TIM2->CCMR1 |= TIM_CCMR1_OC1PE;
+	
+	//Select output polarity: 0 = Activ high, 1 = Active low
+	// Clear bit 1 to set to active high
+	TIM2->CCER &= ~TIM_CCER_CC1NP;//~2;
+	
+	TIM2->CCER |= TIM_CCER_CC1NE;
+	
+	TIM2->BDTR |= TIM_BDTR_MOE;
+	
+	
+//	// bit 4 to be 0 for upcount
+//	// bit 3 to be 0 for continuous
+//	TIM2->CR1 &= ~8;
+//	TIM2->CR1 &= ~4;
+
+	
 	// 
-	TIM2->CCR1 = 2000;
+	TIM2->CCR1 = 50;
 	TIM2->EGR |= TIM_EGR_UG;
 	
 	
-	// Clear bit 1 to set to active high
-	TIM2->CCER &= ~2;
+	
 	
 
 	
