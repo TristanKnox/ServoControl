@@ -30,7 +30,7 @@ void clock_setup(void){
 	
 	// Set prescalar
 	TIM2->PSC = 80-1;
-	TIM2->ARR = 0x4E20;//count of 20,000
+	TIM2->ARR = 999;//0x4E20;//count of 20,000
 	
 	
 	// Clear output compare mode bits for channel 1
@@ -43,23 +43,25 @@ void clock_setup(void){
 	// Output 1 preload enable
 	TIM2->CCMR1 |= TIM_CCMR1_OC1PE;
 	
+	TIM2->CR1 |= TIM_CR1_ARPE;
+	
 	//Select output polarity: 0 = Activ high, 1 = Active low
 	// Clear bit 1 to set to active high
-	TIM2->CCER &= ~TIM_CCER_CC1NP;//~2;
+	TIM2->CCER |= TIM_CCER_CC1E;//~2;
 	
-	TIM2->CCER |= TIM_CCER_CC1NE;
+	//TIM2->CCER |= TIM_CCER_CC1NE;
 	
-	TIM2->BDTR |= TIM_BDTR_MOE;
+	//TIM2->BDTR |= TIM_BDTR_MOE;
 	
 	
 //	// bit 4 to be 0 for upcount
 //	// bit 3 to be 0 for continuous
-//	TIM2->CR1 &= ~8;
-//	TIM2->CR1 &= ~4;
+	TIM2->CR1 &= ~8;
+	TIM2->CR1 &= ~4;
 
 	
 	// 
-	TIM2->CCR1 = 50;
+	TIM2->CCR1 = 200;
 	TIM2->EGR |= TIM_EGR_UG;
 	
 	
