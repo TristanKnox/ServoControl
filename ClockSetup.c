@@ -44,8 +44,7 @@ void clock_setup(void){
 	TIM2->CCMR1 &= ~TIM_CCMR1_OC1M;//~3; // ensure previous values are clear
 	TIM2->CCMR2 &= ~TIM_CCMR2_OC4M;
 	
-	// Select PWM Mode 1 output on channel 1 (OC1M = 110)
-	// channel 1 setup for PWM
+	// Select PWM Mode 1(OC1M = 110)
 	TIM2->CCMR1 |= TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2; // channel 1
 	TIM2->CCMR2 |= TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC4M_2; // channel 4
 	
@@ -54,30 +53,26 @@ void clock_setup(void){
 	TIM2->CCMR1 |= TIM_CCMR1_OC1PE; // channel 1
 	TIM2->CCMR2 |= TIM_CCMR2_OC4PE; // channel 4
 								 
-	
-	TIM2->CR1 |= TIM_CR1_ARPE;
-	
-	
 	//Select output polarity: 0 = Activ high, 1 = Active low
 	// Clear bit 1 to set to active high
 	TIM2->CCER |= TIM_CCER_CC1E;//~2; // channel 1
 	TIM2->CCER |= TIM_CCER_CC4E; // channel 4
+
 	
-	//TIM2->CCER |= TIM_CCER_CC1NE;
-	
-	//TIM2->BDTR |= TIM_BDTR_MOE;
-	
-	
+
+
+// not sure it this is needed
 //	// bit 4 to be 0 for upcount
 //	// bit 3 to be 0 for continuous
 	TIM2->CR1 &= ~8;
 	TIM2->CR1 &= ~4;
+	TIM2->CR1 |= TIM_CR1_ARPE; 
 
 	
 	// 
 	TIM2->CCR1 = 100; // channel 1
 	TIM2->CCR4 = 1000; // channel 4
-	TIM2->EGR |= TIM_EGR_UG;
+	//TIM2->EGR |= TIM_EGR_UG;
 	
 	
 	
