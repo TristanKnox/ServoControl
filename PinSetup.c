@@ -21,10 +21,12 @@ void init_pinX(pin_t pin){
 	
 	int mask;// = build_mask(pin.pin_number, CLEAR, 3,2);
 	mask = mode_mask(pin, CLEAR);
-	GPIOx->MODER &= 0x00;	//Clear the 2 bits associated with mode
+	GPIOx->MODER &= mask;//0x00;	//Clear the 2 bits associated with mode
 
 	mask = mode_mask(pin, SET);
 	GPIOx->MODER |= mask;	// Set the mode for the pin
+	
+	
 }
 	
 // Read given pinX to see if it is set to High or Low
@@ -76,7 +78,21 @@ void output_pinX_OFF(pin_t pin){
 	time_delay(SLEW_COMP);
 }
 
-
+void set_ALT_function(pin_t pin){
+	GPIO_TypeDef * GPIOx = get_GPIOx(pin.group);
+	int AFR_index = 0; // AFRL ( pin 0..7 )
+	int shift_value = pin.pin_number; 
+	int mask = get_AF_base_mask(pin);
+	if(pin.pin_number >= 8){
+		AFR_index = 1; // AFRH ( pin 8..15 )
+		shift_value = pin.pin_number - 8; // pin 8 is a shift of 0 so the diff between pin_number and 8 will result in shift for others
+	}
+	shift_value *= 4; // the mask is 4 bits
+	GPIOx->AFR[AFR_index] &= ~(0xF << shift_value); // Clear bits
+	GPIOx->AFR[AFR_index] |= mask << shift_value; // Set bits
+	
+		
+}
 // Returns the bit configruation needed to set the MODER regester
 // mode is a pin_mode
 int mode_bit_config(mode_t mode){
@@ -179,6 +195,46 @@ GPIO_TypeDef * get_GPIOx(GPIO_group_t group){
 			return 0;
 	}
 }
+
+int get_AF_base_mask(pin_t pin){
+		switch(pin.alt_function){
+			case AF0:
+				return 0; // 0000
+			case AF1:
+				return 1; // 0001
+			case AF2:
+				return 2; // 0010
+			case AF3:
+				return 3; // 0011
+			case AF4:
+				return 4; // 0100
+			case AF5:
+				return 5; // 0101
+			case AF6:
+				return 6; // 0110
+			case AF7:
+				return 7; // 0111
+			case AF8:
+				return 8; // 1000
+			case AF9:
+				return 9; // 1001
+			case AF10:
+				return 10;// 1010
+			case AF11:
+				return 11;// 1011
+			case AF12:
+				return 12;// 1100
+			case AF13:
+				return 13;// 1101
+			case AF14:
+				return 14;// 1110
+			case AF15:
+				return 15;// 1111
+			default:
+				return 0;
+		}
+}
+
 //
 // Counts for given duration to waist time
 void time_delay(int duration){

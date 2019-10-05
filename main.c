@@ -11,7 +11,8 @@
  
 int post_routine(void);
 	
-
+pin_t PA0 = {A,0,OUTPUT};
+pin_t PA1 = {A,1,ALT,AF1};
 
 int main(void){
 	LED_Init();
