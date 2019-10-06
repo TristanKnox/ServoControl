@@ -481,6 +481,16 @@
               <FileType>5</FileType>
               <FilePath>.\PWM.h</FilePath>
             </File>
+            <File>
+              <FileName>TimeTracker.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\TimeTracker.c</FilePath>
+            </File>
+            <File>
+              <FileName>TimeTracker.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\TimeTracker.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

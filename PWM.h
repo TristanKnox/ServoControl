@@ -17,5 +17,5 @@ void enable_channel(channel_t channel, PWM_mode_t mode);
 void set_PSC_and_count(int pre_scalar, int count);
 void add_output_channel(channel_t channel, PWM_mode_t mode, pin_t pin);
 
-void set_channel_pulswidth(channel_t channel, int count);
+void set_puls_width(channel_t channel, int count);
 

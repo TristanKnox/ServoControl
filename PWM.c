@@ -6,7 +6,9 @@ void set_PWM_preload_enable(channel_t channel);
 void set_PWM_output_enable(channel_t channel);
 
 //////////////////////
-void set_channel_pulswidth(channel_t channel, int count){
+
+// Set the puls width for given channel based on the count
+void set_puls_width(channel_t channel, int count){
 	switch(channel){
 		case CHAN1:
 			TIM2->CCR1 = count;
@@ -23,6 +25,7 @@ void set_channel_pulswidth(channel_t channel, int count){
 	}
 }
 
+// initiat and start the clock
 void init_clock(void){
 	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;
 	// Counting direction: 0 = Up-counting, 1 = Down-counting
@@ -30,6 +33,8 @@ void init_clock(void){
 	// Start the clock
 	TIM2->CR1 |= TIM_CR1_CEN;
 }
+
+// Initiat the PWM with initial output channel
 void init_PWM(int pre_scalar, int count, channel_t channel, PWM_mode_t mode, pin_t pin){
 	init_clock();
 	set_PSC_and_count(pre_scalar,count);
@@ -37,23 +42,30 @@ void init_PWM(int pre_scalar, int count, channel_t channel, PWM_mode_t mode, pin
 	set_output_pin(pin);
 }
 
+// Enable given channel 
+// channel = CHAN1, CHAN2, CHAN3, OR CHAN4
+// mode = MODE_1 or MODE_2 where 
+// MODE_1 In upcounting, channel 1 is active as long as TIMx_CNT<TIMx_CCR1 else inactive. In downcounting, channel 1 is inactive (OC1REF=‘0) as long as TIMx_CNT>TIMx_CCR1 else active
+// MODE_2 In upcounting, channel 1 is inactive as long as TIMx_CNT<TIMx_CCR1 else active. In downcounting, channel 1 is active as long as TIMx_CNT>TIMx_CCR1 else inactive.
 void enable_channel(channel_t channel, PWM_mode_t mode){
 	set_PWM_mode(channel, mode);
 	set_PWM_preload_enable(channel);
 	set_PWM_output_enable(channel);
 }
 
-
+// Initiat given pin and set its alt function
 void set_output_pin(pin_t pin){
 	init_pinX(pin);
 	set_ALT_function(pin);
 }
 
+// set up output channel and its pin
 void add_output_channel(channel_t channel, PWM_mode_t mode, pin_t pin){
 	enable_channel(channel,mode);
 	set_output_pin(pin);
 }
 
+// Calebrate the given channel to the given mode
 void set_PWM_mode(channel_t channel, PWM_mode_t mode){
 	int mode_bits;
 	if(mode == MODE_1)
@@ -79,6 +91,8 @@ void set_PWM_mode(channel_t channel, PWM_mode_t mode){
 			break;
 	}
 }
+
+// Enable PWM preload for given channel
 void set_PWM_preload_enable(channel_t channel){
 	switch(channel){
 		case CHAN1:
@@ -95,6 +109,8 @@ void set_PWM_preload_enable(channel_t channel){
 			break;
 	}
 }
+
+// Enable PWM ouput for given channel
 void set_PWM_output_enable(channel_t channel){
 	switch(channel){
 		case CHAN1:
@@ -112,6 +128,8 @@ void set_PWM_output_enable(channel_t channel){
 	}
 }
 
+// Set the prescalar and the count 
+// where count is the count of the clock before clock resets
 void set_PSC_and_count(int pre_scalar, int count){
 	// Set prescalar
 	TIM2->PSC = pre_scalar -1;
