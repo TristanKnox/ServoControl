@@ -11,7 +11,7 @@ typedef enum{
 }channel_t;
 
 void init_clock(void);
-void init_PWM(int pre_scalar, int count, channel_t channel, PWM_mode_t mode, pin_t pin);
+void init_PWM(int pre_scalar, int count);
 void set_output_pin(pin_t pin);
 void enable_channel(channel_t channel, PWM_mode_t mode);
 void set_PSC_and_count(int pre_scalar, int count);

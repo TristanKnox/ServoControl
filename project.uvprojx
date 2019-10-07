@@ -491,6 +491,16 @@
               <FileType>5</FileType>
               <FilePath>.\TimeTracker.h</FilePath>
             </File>
+            <File>
+              <FileName>ServoConrol.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\ServoConrol.c</FilePath>
+            </File>
+            <File>
+              <FileName>ServoControl.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ServoControl.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

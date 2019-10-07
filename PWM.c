@@ -35,11 +35,9 @@ void init_clock(void){
 }
 
 // Initiat the PWM with initial output channel
-void init_PWM(int pre_scalar, int count, channel_t channel, PWM_mode_t mode, pin_t pin){
+void init_PWM(int pre_scalar, int count){
 	init_clock();
 	set_PSC_and_count(pre_scalar,count);
-	enable_channel(channel,mode);
-	set_output_pin(pin);
 }
 
 // Enable given channel 

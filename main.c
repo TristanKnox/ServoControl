@@ -2,10 +2,11 @@
 #include "SysClock.h"
 #include "LED.h"
 #include "UART.h"
+#include "ServoControl.h"
 
 #include "ClockSetup.h"
 #include "UI.h"
-#include "PWM.h"
+//#include "PWM.h"
 #include "TimeTracker.h"
 
 //#include "PinSetup.h"
@@ -13,49 +14,68 @@
 #include <string.h>
 #include <stdio.h>
  
+ 
+#define PCS 80
+#define PWM_count 20000 
+#define PWM_mode MODE_1
+
+
 int post_routine(void);
 	
-pin_t PA0 = {A,0,OUTPUT};
-pin_t PA1 = {A,1,ALT,AF1};
+
 
 int main(void){
 	System_Clock_Init();
 	LED_Init();
+	init_timer_clock();
 	UART2_Init();
 	pin_t PA0 = {A,0,ALT,AF1};
-	pin_t PA3 = {A,3,ALT,AF1};
 	pin_t PA2 = {A,2,ALT,AF1};
-	init_PWM(80*4,20000,CHAN1,MODE_1,PA0);
-	add_output_channel(CHAN4,MODE_1,PA3);
-	add_output_channel(CHAN3,MODE_1,PA2);
 	
-	set_puls_width(CHAN1,1000);
-	set_puls_width(CHAN4,10000);
-	set_puls_width(CHAN3,5000);
+	init_PWM(PCS,PWM_count);
+	add_output_channel(CHAN1,PWM_mode,PA0);
+	add_output_channel(CHAN3,PWM_mode,PA2);
+	
+	servo_t SERVO_1;
+	servo_t SERVO_2;
+		
+	init_servo(&SERVO_1,CHAN1,PWM_count);
+	init_servo(&SERVO_2,CHAN3,PWM_count);
+		
+	set_servo_position(&SERVO_2,5);
+	set_servo_position(&SERVO_1,3);
+	
+	
+	
+	
 	
 	//clock_setup();
-	int duration = 6000;
+	int duration = 10000;
 	//Red_LED_On();
-	timer_t timer;
-	timer = init_timer(duration);
+	timer_t timer1;
+	timer_t timer2;
+	//init_timer(&timer2, 10000);
+	init_timer(&timer1,duration);
 	int input_size = 20;
 	char input[input_size];
 	display_string("Starting");
 	while(1){
-		if(check_timer(timer)){
+		if(check_timer(&timer1)){
 			Green_LED_On();
 			Red_LED_Off();
-			timer = init_timer(duration);
+			init_timer(&timer2,duration);
 		}
-		else{
+		else if(check_timer(&timer2)){
 			Green_LED_Off();
 			Red_LED_On();
+			init_timer(&timer1,duration);
 		}
 		if(get_user_input(input,input_size)){
 			display_string("Input Receved");
 			display_string(input);
 		}
 	}
+	
 }
 
 //
