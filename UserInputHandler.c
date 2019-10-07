@@ -20,6 +20,10 @@ int get_user_input(char* input, int max_input_size){
 			current_char = sprintf((char *) buffer, "%c",rxByte);
 			USART_Write(USART2,buffer,current_char);	
 			input[current_index] = rxByte;
+//			if(rxByte == 0x08){ // Backspace
+//				//current_index--;
+//				//return 0;
+//			}
 			current_index++;
 		}
 		if(rxByte == 0x0D){

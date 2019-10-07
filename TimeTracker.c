@@ -16,9 +16,9 @@ timer_t init_timer(int timer_duration){
 int check_timer(timer_t timer){
 	int current_time = TIM2->CNT;
 	
-	uint8_t buffer[1000];
-	int msg = sprintf((char *) buffer, "%d\r\n",current_time);
-	USART_Write(USART2,buffer,msg);
+//	uint8_t buffer[1000];
+//	int msg = sprintf((char *) buffer, "%d\r\n",current_time);
+//	USART_Write(USART2,buffer,msg);
 	
 	if(current_time - timer.initial_time >= timer.timer_duration)
 		return 1;
