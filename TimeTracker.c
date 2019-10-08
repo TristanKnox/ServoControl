@@ -12,13 +12,14 @@ void init_timer(timer_t* timer, int timer_duration){
 	timer->initial_time = TIM3->CNT;
 	timer->timer_duration = timer_duration;
 }
-//	TODO acount for clock overflow
+
 // Calculate the time passed since init_timer
 // return 1 if time is up
 // return 0 if time is not up
 int check_timer(timer_t* timer){
 	int current_time = TIM3->CNT;
 	int time_diff;
+	// If the timer has started over the time diff is the diff between 
 	if(current_time < timer->initial_time)
 		time_diff = TIM_ARR_ARR - timer->initial_time + current_time;
 	else
