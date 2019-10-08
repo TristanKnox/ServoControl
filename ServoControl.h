@@ -10,7 +10,7 @@
 //#define DUTY_CYCLE_4 8.4
 //#define DUTY_CYCLE_5 10.0
 
-#define SERVO_TIME_PER_POSITION 200
+#define SERVO_TIME_PER_POSITION 5000
 
 // Represent the 6 positions the servo can be in
 typedef enum{
@@ -37,7 +37,7 @@ double get_puls_width(servo_t* servo);
 void set_servo_position(servo_t* servo, int pos);
 void init_servo(servo_t* servo, channel_t channel, int PWM_count);
 servo_state_t check_servo_state(servo_t* servo);
-void calibrate_servo(servo_t* servo, int max_duty_cycle, int min_duty_cycle);
+void calibrate_servo(servo_t* servo, double max_duty_cycle, double min_duty_cycle);
 
 
 

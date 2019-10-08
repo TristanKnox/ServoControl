@@ -6,6 +6,7 @@
 double getDutyCycle(servo_t* servo);
 position_t get_position(int pos_number);
 int get_current_pos_value(position_t pos);
+int get_difference(int value_1, int value_2);
 
 ///////////////////////////////////////////
 ///////////////////////////////////////////
@@ -23,33 +24,40 @@ double get_puls_width(servo_t* servo){
 }
 
 void set_servo_position(servo_t* servo, int pos_number){
-	int positions_to_move = get_current_pos_value(servo->pos);
+	int current_pos_value = get_current_pos_value(servo->pos);
+	int positions_to_move = get_difference(pos_number, current_pos_value);
 	servo->pos = get_position(pos_number);
 	servo->state = IS_MOVING;
 	set_puls_width(servo->channel,get_puls_width(servo));
-	init_timer(&servo->timer, SERVO_TIME_PER_POSITION*positions_to_move);
+	init_timer(&(servo->timer), SERVO_TIME_PER_POSITION*positions_to_move);
 }
 
 servo_state_t check_servo_state(servo_t* servo){
 	if(servo->state ==  IS_MOVING){ // If servo is in motion
-		if(check_timer(&servo->timer))// And servo timer is complete
+		if(check_timer(&(servo->timer)))// And servo timer is complete
 			servo->state = CAN_MOVE;
 	}
 	return servo->state;
 }
 
-void calibrate_servo(servo_t* servo, int max_duty, int min_duty){
+void calibrate_servo(servo_t* servo, double max_duty, double min_duty){
 	servo->max_duty_cycle = max_duty;
 	servo->min_duty_cycle = min_duty;
 }
 
 double getDutyCycle(servo_t* servo){
-	int pos_value = get_current_pos_value(servo->pos);
-	int min = servo->min_duty_cycle;
-	int max = servo->max_duty_cycle; 
+	double pos_value = get_current_pos_value(servo->pos);
+	double min = servo->min_duty_cycle;
+	double max = servo->max_duty_cycle; 
 	// the increment is the difference between each duty cycle
-	int duty_cycle_increment = (max- min) / 5;
+	double duty_cycle_increment = (max- min) / 5;
 	return min + duty_cycle_increment * pos_value;
+}
+
+int get_difference(int value_1, int value_2){
+	if( value_1 > value_2 )
+		return value_1 - value_2;
+	return value_2 - value_1;
 }
 
 position_t get_position(int pos_number){

@@ -19,10 +19,10 @@
 
 // These values should be adjusted to calibrate each individual servo
 // Once the min and max are set by using calibrat_servo the other duty cycles for positions in between are calculated as needed
-#define SERVO_1_MIN_DUTY_CALIBRATION 2.0
-#define SERVO_1_MAX_DUTY_CALIBRATION 10.0
-#define SERVO_2_MIN_DUTY_CALIBRATION 2.0
-#define SERVO_2_MAX_DUTY_CALIBRATION 10.0
+#define SERVO_1_MIN_DUTY_CALIBRATION 2.7  //Calibrated for box 2015 Right Servo
+#define SERVO_1_MAX_DUTY_CALIBRATION 9.2  //Calibrated for box 2015 Right Servo
+#define SERVO_2_MIN_DUTY_CALIBRATION 2.7  //Calibrated for box 2015 Left Servo
+#define SERVO_2_MAX_DUTY_CALIBRATION 9.4  //Calibrated for box 2015 Left Servo
 
 
 
@@ -56,6 +56,12 @@ int main(void){
 			Green_LED_Toggle();
 			Red_LED_Toggle();
 			init_timer(&loop_timer,duration);
+			if(check_servo_state(&SERVO_2) != IS_MOVING){
+				if(SERVO_2.pos == POS0)
+					set_servo_position(&SERVO_2,5);
+				else
+					set_servo_position(&SERVO_2,0);
+		}
 		}
 		if(get_user_input(input,input_size)){
 			display_string("Input Receved");
@@ -88,7 +94,7 @@ void initial_servo_setup(){
 	calibrate_servo(&SERVO_2, SERVO_2_MAX_DUTY_CALIBRATION, SERVO_2_MIN_DUTY_CALIBRATION);
 	
 	set_servo_position(&SERVO_1,0);
-	set_servo_position(&SERVO_2,0);
+	set_servo_position(&SERVO_2,5);
 }
 
 //
