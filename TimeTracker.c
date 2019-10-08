@@ -4,6 +4,7 @@
 
 void start_clock(void);
 
+#define TIMER_PSC (80-1) * 10000 
 #define COUNT_TOTAL 60000
 
 // Create a new timer and set its initial time
@@ -40,7 +41,7 @@ void init_timer_clock(void){
 void start_clock(){
 	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM3EN;
 	
-	TIM3->PSC = (80-1) * 10000;
+	TIM3->PSC = TIMER_PSC;
 	TIM3->ARR = COUNT_TOTAL;
 	
 	TIM3->CR1 &= ~TIM_CR1_DIR; //up_counting

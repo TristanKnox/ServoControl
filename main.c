@@ -19,21 +19,21 @@
 
 // These values should be adjusted to calibrate each individual servo
 // Once the min and max are set by using calibrat_servo the other duty cycles for positions in between are calculated as needed
-#define SERVO_1_MIN_DUTY_CALIBRATION 2.7  //Calibrated for box #13-2015 Right Servo
-#define SERVO_1_MAX_DUTY_CALIBRATION 9.2  //Calibrated for box #13-2015 Right Servo
+#define SERVO_1_MIN_DUTY_CALIBRATION 3.0 //2.7  //Calibrated for box #13-2015 Right Servo
+#define SERVO_1_MAX_DUTY_CALIBRATION 8.9 //9.2  //Calibrated for box #13-2015 Right Servo
 #define SERVO_2_MIN_DUTY_CALIBRATION 2.7  //Calibrated for box #13-2015 Left Servo
 #define SERVO_2_MAX_DUTY_CALIBRATION 9.4  //Calibrated for box #13-2015 Left Servo
 
+#define START_POS 0
 
-
-servo_t SERVO_1;
-servo_t SERVO_2;
+servo_t SERVO_1; //CHAN1,PA0
+servo_t SERVO_2; //CHAN3,PA2
 
 
 int post_routine(void);
-void init_system_recources();	
-void initial_PWM_setup();
-void initial_servo_setup();
+void init_system_recources(void);	
+void initial_PWM_setup(void);
+void initial_servo_setup(void);
 
 int main(void){
 
@@ -43,7 +43,7 @@ int main(void){
 	
 	
 	
-	int duration = 10000;
+	int duration = 100;
 	timer_t loop_timer;
 	init_timer(&loop_timer,duration);
 	
@@ -61,7 +61,19 @@ int main(void){
 					set_servo_position(&SERVO_2,5);
 				else
 					set_servo_position(&SERVO_2,0);
-		}
+			}
+			if(check_servo_state(&SERVO_1) != IS_MOVING){
+				position_t pos = SERVO_1.pos;
+				if(pos == POS0)
+					set_servo_position(&SERVO_1,5);
+				else if(pos == POS5)
+					set_servo_position(&SERVO_1,3);
+				else if(pos == POS3)
+					set_servo_position(&SERVO_1,4);
+				else if(pos == POS4)
+					set_servo_position(&SERVO_1,0);
+				
+			}
 		}
 		if(get_user_input(input,input_size)){
 			display_string("Input Receved");
@@ -71,14 +83,14 @@ int main(void){
 	
 }
 
-void init_system_recources(){
+void init_system_recources(void){
 	System_Clock_Init();
 	LED_Init();
 	init_timer_clock();
 	UART2_Init();
 }
 
-void initial_PWM_setup(){
+void initial_PWM_setup(void){
 	pin_t PA0 = {A,0,ALT,AF1};
 	pin_t PA2 = {A,2,ALT,AF1};
 	
@@ -87,14 +99,14 @@ void initial_PWM_setup(){
 	add_output_channel(CHAN3,PWM_mode,PA2);
 }
 
-void initial_servo_setup(){
+void initial_servo_setup(void){
 	init_servo(&SERVO_1,CHAN1,PWM_count);
 	init_servo(&SERVO_2,CHAN3,PWM_count);
 	calibrate_servo(&SERVO_1, SERVO_1_MAX_DUTY_CALIBRATION, SERVO_1_MIN_DUTY_CALIBRATION);
 	calibrate_servo(&SERVO_2, SERVO_2_MAX_DUTY_CALIBRATION, SERVO_2_MIN_DUTY_CALIBRATION);
 	
-	set_servo_position(&SERVO_1,0);
-	set_servo_position(&SERVO_2,5);
+	set_servo_position(&SERVO_1,START_POS);
+	set_servo_position(&SERVO_2,START_POS);
 }
 
 //
