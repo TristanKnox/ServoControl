@@ -4,6 +4,7 @@
 
 void start_clock(void);
 
+#define COUNT_TOTAL 60000
 
 // Create a new timer and set its initial time
 // return timer
@@ -21,7 +22,7 @@ int check_timer(timer_t* timer){
 	int time_diff;
 	// If the timer has started over the time diff is the diff between 
 	if(current_time < timer->initial_time)
-		time_diff = TIM_ARR_ARR - timer->initial_time + current_time;
+		time_diff = COUNT_TOTAL - timer->initial_time + current_time;
 	else
 		time_diff = current_time - timer->initial_time; 
 	
@@ -40,7 +41,7 @@ void start_clock(){
 	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM3EN;
 	
 	TIM3->PSC = (80-1) * 10000;
-	TIM3->ARR = TIM_ARR_ARR;
+	TIM3->ARR = COUNT_TOTAL;
 	
 	TIM3->CR1 &= ~TIM_CR1_DIR; //up_counting
 	
