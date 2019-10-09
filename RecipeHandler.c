@@ -47,7 +47,7 @@ command_t build_command(recipe_t* recipe_p){
 	command_t command;
 	command.opcode = opcode;
 	command.value = cmd_param;
-	if(validat_opcode(&command)){
+	if(!validat_opcode(&command)){
 		recipe_p->is_active = 0;
 		command.opcode = RECIPE_END;
 		Red_LED_On();
