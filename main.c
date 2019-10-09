@@ -11,10 +11,11 @@
 #include <string.h>
 #include <stdio.h>
  
- 
 #define PCS 80
 #define PWM_count 20000 
 #define PWM_mode MODE_1
+
+#define MAX_INPUT 3
 
 
 // These values should be adjusted to calibrate each individual servo
@@ -50,25 +51,23 @@ int main(void){
 	timer_t loop_timer;
 	init_timer(&loop_timer,duration);
 	
-	int input_size = 20;
-	char input[input_size];
-	display_string("Starting Main Loop");
+	char input[MAX_INPUT];
+	display_string("Loading recipes...");
 	
 	recipe_t recipe_1;
 	recipe_t recipe_2;
+	
 	unsigned char recipe1[] = { LOOP + 2,MOV+ 5,MOV+0, END_LOOP,WAIT+ 5, LOOP + 5,MOV+5, WAIT+2,MOV+3,END_LOOP, RECIPE_END } ;
 	unsigned char recipe2[] = { MOV | 5,WAIT+31,WAIT+31,WAIT+31,MOV+0, RECIPE_END, MOV + 5 } ;
 	unsigned char demo_recipe[] = {MOV+0,MOV+5,MOV+0,MOV+3,MOV+1,MOV+4,END_LOOP,MOV+0,MOV+2,WAIT+0,MOV+3,WAIT+0,MOV+2,MOV+3,WAIT+31,WAIT+31,WAIT+31,MOV+4,RECIPE_END};
 	unsigned char recipe_loop_error[] = { LOOP + 2,MOV+ 5,MOV+0, LOOP+2,MOV+3,END_LOOP, END_LOOP, RECIPE_END } ;
 	unsigned char recipe_error[] = {MOV+0,MOV+5,5,MOV+0,RECIPE_END};
 	
-	init_recipe(&recipe_1,recipe_loop_error);
-	init_recipe(&recipe_2,recipe2);
-	
-	command_t servo1_command;
-	command_t servo2_command;
+	init_recipe(&recipe_1,demo_recipe);
 
-	display_string("Starting Main Loop");
+	init_recipe(&recipe_2,recipe2);
+
+	display_string("Starting Main Loop...");
 	while(1){
 		if(check_timer(&loop_timer)){
 			init_timer(&loop_timer,duration);
@@ -76,9 +75,10 @@ int main(void){
 			update_servo_1(&recipe_1);
 			update_servo_2(&recipe_2);
 		}
-		if(get_user_input(input,input_size)){
+		if(get_user_input(input, MAX_INPUT)){
 			display_string("Input Receved");
 			display_string(input);
+			validate_input(input);
 		}
 	}
 	
@@ -120,7 +120,7 @@ void update_servo_1(recipe_t* recipe_1){
 				else
 					Green_LED_Off();
 					
-			}				
+	}				
 }
 
 void update_servo_2(recipe_t* recipe_2){
@@ -143,7 +143,5 @@ int post_routine(void){
 		if(check_for_input())
 			return 1;
 	}
-	return 0;
-		
+	return 0;	
 }
-

@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-uint8_t clock_buffer[BufferSize];
+uint8_t clock_buffer[BUFFER_SIZE];
 //
 // Sets up the TIM2 clock
 // And GPIOA pin 3 with ALT function set to AF1

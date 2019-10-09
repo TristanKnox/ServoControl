@@ -31,6 +31,10 @@ command_t get_next_command(recipe_t* recipe_p){
 			recipe_p->current_index = recipe_p->loop_start_index;
 			recipe_p->loop_count--;
 		}
+	if(command.opcode == RESTART)
+	{
+		recipe_p->current_index = 0;
+	}
 		command = build_command(recipe_p);
 	}
 	if(command.opcode == RECIPE_END){

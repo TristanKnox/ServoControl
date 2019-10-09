@@ -28,6 +28,5 @@ typedef struct{
 }command_t;
 
 
-
 void init_recipe(recipe_t* recipe, unsigned char* recipe_array);
 command_t get_next_command(recipe_t* recipe);

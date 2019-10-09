@@ -3,7 +3,8 @@
 
 #include "stm32l476xx.h"
 
-#define BufferSize 32
+#define BUFFER_SIZE 32
+#define OVERFLOW_BUFFER_SIZE 100
 
 void UART2_Init(void);
 void UART2_GPIO_Init(void);

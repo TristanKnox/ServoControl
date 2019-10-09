@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-uint8_t buffer[BufferSize];
+uint8_t buffer[BUFFER_SIZE];
 //char RxComByte = 0;
 
 // Function Declaration
