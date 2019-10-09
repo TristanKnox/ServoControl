@@ -1,5 +1,6 @@
 #include "PWM.h"
 #include "TimeTracker.h"
+#include "RecipeHandler.h"
 
 
 //// DUTY_CYCLE is the percentage of the PWM_cunt the output pin should be on 
@@ -11,6 +12,7 @@
 //#define DUTY_CYCLE_5 10.0
 
 #define SERVO_TIME_PER_POSITION 5000
+#define SERVO_BASE_WAIT_TIME 2000
 
 // Represent the 6 positions the servo can be in
 typedef enum{
@@ -18,7 +20,7 @@ typedef enum{
 }position_t;
 
 typedef enum{
-	CAN_MOVE, IS_MOVING
+	READY_FOR_CMD, IS_MOVING, IS_WAITING
 }servo_state_t;
 
 // Holds info each Servo needs to know
@@ -38,6 +40,7 @@ void set_servo_position(servo_t* servo, int pos);
 void init_servo(servo_t* servo, channel_t channel, int PWM_count);
 servo_state_t check_servo_state(servo_t* servo);
 void calibrate_servo(servo_t* servo, double max_duty_cycle, double min_duty_cycle);
+void execute_CMD(servo_t* servo, command_t* command);
 
 
 

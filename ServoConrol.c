@@ -7,6 +7,7 @@ double getDutyCycle(servo_t* servo);
 position_t get_position(int pos_number);
 int get_current_pos_value(position_t pos);
 int get_difference(int value_1, int value_2);
+void set_servo_wait(servo_t* servo, command_t* command);
 
 ///////////////////////////////////////////
 ///////////////////////////////////////////
@@ -14,8 +15,20 @@ int get_difference(int value_1, int value_2);
 void init_servo(servo_t* servo, channel_t chan, int pwm_count){
 	servo->channel = chan;
 	servo->PWM_count = pwm_count;
-	servo->state = CAN_MOVE;
+	servo->state = READY_FOR_CMD;
 	set_servo_position(servo,0);
+}
+
+void execute_CMD(servo_t* servo, command_t* command){
+	if(command->opcode == MOV)
+		set_servo_position(servo,command->value);
+	if(command->opcode == WAIT)
+		set_servo_wait(servo,command);
+}
+
+void set_servo_wait(servo_t* servo, command_t* command){
+	servo->state = IS_WAITING;
+	init_timer(&(servo->timer), command->value * SERVO_BASE_WAIT_TIME);
 }
 
 double get_puls_width(servo_t* servo){
@@ -33,9 +46,9 @@ void set_servo_position(servo_t* servo, int pos_number){
 }
 
 servo_state_t check_servo_state(servo_t* servo){
-	if(servo->state ==  IS_MOVING){ // If servo is in motion
+	if(servo->state ==  IS_MOVING || servo->state == IS_WAITING){ // If servo is in motion
 		if(check_timer(&(servo->timer)))// And servo timer is complete
-			servo->state = CAN_MOVE;
+			servo->state = READY_FOR_CMD;
 	}
 	return servo->state;
 }

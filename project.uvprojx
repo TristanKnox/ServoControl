@@ -511,6 +511,16 @@
               <FileType>5</FileType>
               <FilePath>.\RecipeParser.h</FilePath>
             </File>
+            <File>
+              <FileName>RecipeHandler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\RecipeHandler.c</FilePath>
+            </File>
+            <File>
+              <FileName>RecipeHandler.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\RecipeHandler.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
