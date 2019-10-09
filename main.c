@@ -5,7 +5,8 @@
 #include "ServoControl.h"
 
 #include "ClockSetup.h"
-#include "UI.h"
+//#include "UI.h"
+#include "RecipeParser.h"
 
 
 #include <string.h>
@@ -22,7 +23,7 @@
 #define SERVO_1_MIN_DUTY_CALIBRATION 3.0 //2.7  //Calibrated for box #13-2015 Right Servo
 #define SERVO_1_MAX_DUTY_CALIBRATION 8.9 //9.2  //Calibrated for box #13-2015 Right Servo
 #define SERVO_2_MIN_DUTY_CALIBRATION 2.7  //Calibrated for box #13-2015 Left Servo
-#define SERVO_2_MAX_DUTY_CALIBRATION 9.4  //Calibrated for box #13-2015 Left Servo
+#define SERVO_2_MAX_DUTY_CALIBRATION 9.8  //Calibrated for box #13-2015 Left Servo
 
 #define START_POS 0
 
@@ -35,6 +36,8 @@ void init_system_recources(void);
 void initial_PWM_setup(void);
 void initial_servo_setup(void);
 
+void update_servo_test();
+
 int main(void){
 
 	init_system_recources();
@@ -43,7 +46,7 @@ int main(void){
 	
 	
 	
-	int duration = 100;
+	int duration = 1000;
 	timer_t loop_timer;
 	init_timer(&loop_timer,duration);
 	
@@ -51,29 +54,17 @@ int main(void){
 	char input[input_size];
 	display_string("Starting Main Loop");
 	
+	recipe_t recipe_1;
+	recipe_t recipe_2;
+	init_recipe(&recipe_1,"MOV+1\nMOV+5\nMOV1");
+	
 	while(1){
 		if(check_timer(&loop_timer)){
 			Green_LED_Toggle();
 			Red_LED_Toggle();
 			init_timer(&loop_timer,duration);
-			if(check_servo_state(&SERVO_2) != IS_MOVING){
-				if(SERVO_2.pos == POS0)
-					set_servo_position(&SERVO_2,5);
-				else
-					set_servo_position(&SERVO_2,0);
-			}
-			if(check_servo_state(&SERVO_1) != IS_MOVING){
-				position_t pos = SERVO_1.pos;
-				if(pos == POS0)
-					set_servo_position(&SERVO_1,5);
-				else if(pos == POS5)
-					set_servo_position(&SERVO_1,3);
-				else if(pos == POS3)
-					set_servo_position(&SERVO_1,4);
-				else if(pos == POS4)
-					set_servo_position(&SERVO_1,0);
-				
-			}
+			update_servo_test();
+			get_next(&recipe_1);
 		}
 		if(get_user_input(input,input_size)){
 			display_string("Input Receved");
@@ -107,6 +98,27 @@ void initial_servo_setup(void){
 	
 	set_servo_position(&SERVO_1,START_POS);
 	set_servo_position(&SERVO_2,START_POS);
+}
+
+void update_servo_test(){
+	if(check_servo_state(&SERVO_2) != IS_MOVING){
+				if(SERVO_2.pos == POS0)
+					set_servo_position(&SERVO_2,5);
+				else
+					set_servo_position(&SERVO_2,0);
+			}
+			if(check_servo_state(&SERVO_1) != IS_MOVING){
+				position_t pos = SERVO_1.pos;
+				if(pos == POS0)
+					set_servo_position(&SERVO_1,5);
+				else if(pos == POS5)
+					set_servo_position(&SERVO_1,3);
+				else if(pos == POS3)
+					set_servo_position(&SERVO_1,4);
+				else if(pos == POS4)
+					set_servo_position(&SERVO_1,0);
+				
+			}
 }
 
 //

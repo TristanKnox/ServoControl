@@ -501,6 +501,16 @@
               <FileType>5</FileType>
               <FilePath>.\ServoControl.h</FilePath>
             </File>
+            <File>
+              <FileName>RecipeParser.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\RecipeParser.c</FilePath>
+            </File>
+            <File>
+              <FileName>RecipeParser.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\RecipeParser.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
