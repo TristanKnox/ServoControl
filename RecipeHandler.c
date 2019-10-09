@@ -3,6 +3,7 @@
 #define OPCODE_MASK 0xE0
 #define CMD_PARAM_MASK ~OPCODE_MASK
 command_t build_command(recipe_t* recipe_p);
+int validat_opcode(command_t* command);
 
 void init_recipe(recipe_t* recipe, unsigned char* recipe_array){
 	recipe->current_index = 0;
@@ -15,6 +16,12 @@ void init_recipe(recipe_t* recipe, unsigned char* recipe_array){
 command_t get_next_command(recipe_t* recipe_p){
 	command_t command = build_command(recipe_p);
 	if(command.opcode == LOOP){
+		if(recipe_p->loop_count > 0){
+			Red_LED_On();
+			recipe_p->is_active = 0;
+			command.opcode = RECIPE_END;
+			return command;
+		}
 		recipe_p->loop_start_index = recipe_p->current_index;
 		recipe_p->loop_count = command.value;
 		command = build_command(recipe_p);
@@ -44,5 +51,26 @@ command_t build_command(recipe_t* recipe_p){
 	command_t command;
 	command.opcode = opcode;
 	command.value = cmd_param;
+	if(validat_opcode(&command)){
+		recipe_p->is_active = 0;
+		command.opcode = RECIPE_END;
+		Red_LED_On();
+	}
 	return command;
 }
+
+int validat_opcode(command_t* command){
+	switch(command->opcode){
+		case MOV:
+		case WAIT:
+		case LOOP:
+		case END_LOOP:
+		case RECIPE_END:
+		case RESTART:
+			return 1;
+		default:
+			return 0;
+	}
+}
+
+

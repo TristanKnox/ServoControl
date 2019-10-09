@@ -1,6 +1,5 @@
 #include "stm32l476xx.h"
 #include "SysClock.h"
-#include "LED.h"
 #include "UART.h"
 #include "ServoControl.h"
 
@@ -57,8 +56,10 @@ int main(void){
 	
 	recipe_t recipe_1;
 	recipe_t recipe_2;
-	unsigned char recipe1[] = { MOV +5, WAIT + 3 ,MOV +0 , LOOP + 3 , MOV + 3, MOV + 0 , END_LOOP , MOV + 5 , RECIPE_END } ;
-	unsigned char recipe2[] = { MOV | 5, WAIT + 5 , MOV | 2, RECIPE_END } ;
+
+	unsigned char recipe1[] = { LOOP + 2, MOV+ 5,MOV+0, END_LOOP,WAIT+ 5, LOOP + 5,MOV+5, WAIT+2,MOV+3,END_LOOP, RECIPE_END } ;
+	unsigned char recipe2[] = { MOV | 5,WAIT+31,WAIT+31,WAIT+31,MOV+0, RECIPE_END } ;
+	unsigned char demo_recipe[] = {MOV+0,MOV+5,MOV+0,MOV+3,MOV+1,MOV+4,END_LOOP,MOV+0,MOV+2,WAIT+0,MOV+3,WAIT+0,MOV+2,MOV+3,WAIT+31,WAIT+31,WAIT+31,MOV+4};
 	
 	init_recipe(&recipe_1,recipe1);
 	init_recipe(&recipe_2,recipe2);
@@ -66,16 +67,10 @@ int main(void){
 	display_string("Starting Main Loop...");
 	while(1){
 		if(check_timer(&loop_timer)){
-			Green_LED_Toggle();
-			Red_LED_Toggle();
 			init_timer(&loop_timer,duration);
 			
 			update_servo_1(&recipe_1);
 			update_servo_2(&recipe_2);
-			
-			//servo2_command = get_next(&recipe_2);
-			//update_servo_test();
-			//get_next(&recipe_1);
 		}
 		if(get_user_input(input, MAX_INPUT)){
 			display_string("Input Receved");
@@ -115,9 +110,12 @@ void initial_servo_setup(void){
 void update_servo_1(recipe_t* recipe_1){
 	if(check_servo_state(&SERVO_1) == READY_FOR_CMD){
 				if(recipe_1->is_active){
+					Green_LED_On();
 					command_t command = get_next_command(recipe_1);
 					execute_CMD(&SERVO_1, &command);
 				}
+				else
+					Green_LED_Off();
 					
 	}				
 }
