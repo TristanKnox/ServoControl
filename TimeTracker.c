@@ -4,7 +4,7 @@
 
 void start_clock(void);
 
-#define TIMER_PSC (80-1) * 10000 
+#define TIMER_PSC (80000-1)
 #define COUNT_TOTAL 60000
 
 // Create a new timer and set its initial time
