@@ -14,6 +14,15 @@ int validate_Yes_No(char* input){
 	}
 }
 
+int validate_input(char* input)
+{
+	switch(input[0])
+	{
+		default:
+			return 0;
+	}
+}
+
 // Check if the given value is within the given range
 // Return 1 if in range
 // Return 0 if not in range

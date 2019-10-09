@@ -131,7 +131,7 @@ void USART_IRQHandler(USART_TypeDef * USARTx, uint8_t *buffer, uint32_t * pRx_co
 	if(USARTx->ISR & USART_ISR_RXNE) {						// Received data                         
 		buffer[*pRx_counter] = USARTx->RDR;         // Reading USART_DR automatically clears the RXNE flag 
 		(*pRx_counter)++;  
-		if((*pRx_counter) >= BufferSize )  {
+		if((*pRx_counter) >=  BUFFER_SIZE)  {
 			(*pRx_counter) = 0;
 		}   
 	} else if(USARTx->ISR & USART_ISR_TXE) {

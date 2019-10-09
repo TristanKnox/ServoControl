@@ -9,6 +9,7 @@
 #define WAIT 0x40
 #define LOOP 0x80
 #define END_LOOP 0xA0
+#define RESTART 0xC0
 #define RECIPE_END 0x00
 
 
@@ -24,7 +25,6 @@ typedef struct{
 	uint8_t opcode;
 	uint8_t value;
 }command_t;
-
 
 
 void init_recipe(recipe_t* recipe, unsigned char* recipe_array);

@@ -36,9 +36,9 @@ void  display_charater_sequence(int span, char charater){
 // Display given string to UART
 // Always includes return carage and new line
 void display_string(char* string){
-	uint8_t buffer[strlen(string)];
-	int msg = sprintf((char *) buffer, "%s\r\n",string);
-	USART_Write(USART2,buffer,msg);
+	uint8_t display_buffer[BUFFER_SIZE];
+	int msg = sprintf((char *) display_buffer, "%s\r\n",string);
+	USART_Write(USART2,display_buffer,msg);
 }
 //
 // Center align the given string within the given span
