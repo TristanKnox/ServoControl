@@ -12,7 +12,7 @@
 //#define DUTY_CYCLE_5 10.0
 
 #define SERVO_TIME_PER_POSITION 1000
-#define SERVO_BASE_WAIT_TIME 100
+#define SERVO_BASE_WAIT_TIME 510
 
 // Represent the 6 positions the servo can be in
 typedef enum{
